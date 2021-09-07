@@ -244,6 +244,13 @@ return (
 - Store 라는애를 통해 컴포넌트들에게 state를 저장,유지,전달 한다고함
 - 스토어 : 무엇이 일어날지를 나타내는 action, 그리고 action에 따라 상태를 수정하는 reducer를 저장하는 객체
 - 리듀서 : action을 통해 어떤 행동을 정의하면 어플리케이션 상태가 어떻게 바뀌는지 특정하게 되는 함수 action 타입에 따라 state를 반환
+- 리덕스 쉽게설명 : https://medium.com/@ca3rot/%EC%95%84%EB%A7%88-%EC%9D%B4%EA%B2%8C-%EC%A0%9C%EC%9D%BC-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0-%EC%89%AC%EC%9A%B8%EA%B1%B8%EC%9A%94-react-redux-%ED%94%8C%EB%A1%9C%EC%9A%B0%EC%9D%98-%EC%9D%B4%ED%95%B4-1585e911a0a6
+- 리덕스는 언론에 비유할 수 있다. 모든 정보는 리덕스가 가지고있다.
+- 어떤 컴포넌트가 구성원들에게 전달하고 싶은 정보가 있으면 소문대신에 리덕스라는 언론사에 제보한다.
+- 리덕스는 전체 컴포넌트에 방송을 한다. 
+- 전체 컴포넌트에게 하고 싶은 말이 있으면 리덕스를 통해 스토에 제보한다. 
+- 방송은 필요하지 않은 사람에게도 소식이 전달되서 리액트와 리덕스를 연결해주는 react-redux를 사용하여 필요한 컴포넌트에만 소식을 전한다.
+
 ## store.js 생성
 ```store.js
 import { createStore, applyMiddleware } from "redux";
@@ -263,4 +270,39 @@ const store = createStore(
 
 export default store;
 ```
-- 리듀서 폴더 생성, index.js 생성 
+- reducers 폴더 생성, index.js(combindreducer), leads.js(action 타입에 따라서 state리턴해줌) 추가
+- actinos 폴더생성 leads.js(axios사용하여 비동기 http Request), types.js(const string 정의) 
+
+- 리덕스와함께 어떤 컴포넌트와 일할때는 connect가 필요, react redex 패키지에 있음
+- mapStateToProps
+- leads 컴포넌트 수정 
+```
+import {connect} from "react-redux";
+import PropTypes from 'prop-types';
+import {getLeads} from "../../actions/leads";
+export class Leads extends Component {
+    static propTypes ={
+        leads: PropTypes.array.isRequired
+    }
+    componentDidMount() {
+        this.props.getLeads();
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>Leads List</h1>
+            </div>
+        );
+    }
+}
+
+const mapStateToProps = state => ({
+    leads: state.leads.leads
+});
+export default connect(mapStateToProps)(Leads);
+```
+
+---
+## reducer 에서 State 확인 장고에서 만든 leads 확인 
+## request의해 action이 만들어지고 django가 leads를 받고 leads가 state로 들어온것
